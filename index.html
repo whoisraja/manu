@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Manu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap');
+*{-webkit-tap-highlight-color:transparent}
+
+body{
+ margin:0;height:100vh;
+ background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url("manu.jpg") center/cover no-repeat;
+ font-family:'Nunito',sans-serif;
+ display:flex;justify-content:center;align-items:center;
+ overflow:hidden;
+}
+
+.container{
+ width:92%;max-width:420px;
+ background:rgba(255,255,255,.95);
+ padding:20px;border-radius:22px;
+ border:3px solid #ff9bb0;
+ text-align:center;
+ box-shadow:0 10px 25px rgba(0,0,0,.3);
+}
+
+.hidden{display:none}
+h1{font-family:'Fredoka One';color:#ff3366;font-size:2.1rem}
+p{font-size:1.1rem;font-weight:600;color:#333}
+
+.buttons{display:flex;gap:16px;justify-content:center;margin-top:12px}
+button{
+ padding:13px 26px;font-size:1.1rem;
+ border-radius:40px;border:none;
+ cursor:pointer;font-family:'Fredoka One'
+}
+#yesBtn{background:#ff3366;color:#fff}
+#noBtn{background:#333;color:#fff;position:relative}
+
+.meme{width:100%;max-width:220px;border-radius:12px;margin-bottom:8px}
+
+.heart{
+ position:fixed;bottom:-30px;font-size:26px;
+ animation:floatHeart 4s ease-out forwards;
+ pointer-events:none;z-index:9999
+}
+@keyframes floatHeart{
+ from{transform:translateY(0) scale(.8);opacity:1}
+ to{transform:translateY(-100vh) scale(1.6);opacity:0}
+}
+.sparkle{
+ position:fixed;bottom:-20px;font-size:20px;
+ animation:floatHeart 3s ease-out forwards;
+ pointer-events:none;z-index:9999
+}
+
+.ring{font-size:3.5rem;animation:pop 1s ease forwards}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+.letter-btn{font-size:2.6rem;cursor:pointer;margin-top:8px}
+.letter-box{
+ background:#fff;padding:14px;border-radius:14px;
+ margin-top:10px;font-size:1.02rem;text-align:left;
+ max-height:220px;overflow-y:auto;
+ opacity:0;transform:translateY(10px);
+ transition:.4s
+}
+.letter-box.show{opacity:1;transform:translateY(0)}
+
+.voice-btn{font-size:2.2rem;margin-top:10px;cursor:pointer;opacity:0;transition:.4s}
+.voice-btn.show{opacity:1}
+
+.whatsapp-btn{
+ margin-top:12px;padding:11px 18px;
+ font-size:1rem;border-radius:30px;
+ border:none;background:#25D366;color:#fff;
+ font-family:'Fredoka One';cursor:pointer;
+ opacity:0;transition:.4s
+}
+.whatsapp-btn.show{opacity:1}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop preload="auto"><source src="love_music.mp3"></audio>
+<audio id="voiceNote" preload="auto"><source src="voice_note.mp3"></audio>
+
+<!-- MAIN -->
+<div class="container" id="mainCard">
+ <img id="memeImg" class="meme" src="https://media.giphy.com/media/cLS1cfxvGOPVpf9g3y/giphy.gif">
+ <h1>Manu</h1>
+ <p id="questionText">Will you be my life partner?</p>
+ <div class="buttons">
+  <button id="yesBtn">YES</button>
+  <button id="noBtn">NO</button>
+ </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="container hidden" id="successCard">
+ <div class="ring">💍</div>
+ <h1>Yeahhh!! 💖🥹</h1>
+ <p>I knew you would say yes ❤️</p>
+
+ <div class="letter-btn" id="letterBtn">💌</div>
+
+ <div class="letter-box" id="letterBox">
+  <strong>Dear oo Mannu 💖</strong><br><br>
+
+  8th September. The first time I saw you in office, from a distance.  
+  White dress, jeans and that cute bow.  
+  I still remember it clearly 🥹<br><br>
+
+  Our first proper conversation was at the Diwali party.  
+  I was a little drunk and you were smiling so much.  
+  Even the wrong metro station became a sweet memory.<br><br>
+
+  Cine Tree Café slowly became our place ☕  
+  Long talks, deeper conversations and just knowing each other better.<br><br>
+
+  Walking for thirty minutes just to do something silly.  
+  Those small moments became my favourite memories.<br><br>
+
+  Daily vegetable juice sounds normal to others.  
+  For me it became special because it reminded me of you.<br><br>
+
+  Oo Mannu, when you call me Raja,  
+  you look unbelievably cute.  
+  I think I had a crush on you from the very beginning ❤️<br><br>
+
+  I would choose you every time, for all the years ahead.<br><br>
+
+  Raja
+ </div>
+
+ <div class="voice-btn" id="voiceBtn">🎧</div>
+ <button class="whatsapp-btn" id="whatsappBtn">Love you too</button>
+</div>
+
+<script>
+const bgMusic=document.getElementById("bgMusic"),
+voiceNote=document.getElementById("voiceNote"),
+yesBtn=document.getElementById("yesBtn"),
+noBtn=document.getElementById("noBtn"),
+mainCard=document.getElementById("mainCard"),
+successCard=document.getElementById("successCard"),
+memeImg=document.getElementById("memeImg"),
+questionText=document.getElementById("questionText"),
+letterBtn=document.getElementById("letterBtn"),
+letterBox=document.getElementById("letterBox"),
+voiceBtn=document.getElementById("voiceBtn"),
+whatsappBtn=document.getElementById("whatsappBtn");
+
+let musicStarted=false,letterOpened=false,autoScroll=null,voicePlayed=false;
+
+const sadGifs=[
+"https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif",
+"https://media.giphy.com/media/L95W4wv8nnb9K/giphy.gif",
+"https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif",
+"https://media.giphy.com/media/AauJT0w8cJoSQ/giphy.gif"
+];
+const funnyTexts=["Are you serious","Wrong button","Pink wala dabao","Please dont"];
+
+function launchHearts(arr=["💖","💗","💘"]){
+ let c=0;const i=setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";h.innerText=arr[Math.floor(Math.random()*arr.length)];
+  h.style.left=Math.random()*100+"vw";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),4000);
+  if(++c>18)clearInterval(i);
+ },150);
+}
+
+function sparkles(){
+ for(let i=0;i<10;i++){
+  const s=document.createElement("div");
+  s.className="sparkle";s.innerText="✨";
+  s.style.left=Math.random()*100+"vw";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),3000);
+ }
+}
+
+noBtn.addEventListener("touchstart",e=>{
+ e.preventDefault();
+ memeImg.src=sadGifs[Math.floor(Math.random()*sadGifs.length)];
+ questionText.innerText=funnyTexts[Math.floor(Math.random()*funnyTexts.length)];
+ noBtn.style.position="fixed";
+ noBtn.style.left=Math.random()*70+"vw";
+ noBtn.style.top=Math.random()*70+"vh";
+});
+
+yesBtn.onclick=()=>{
+ if(!musicStarted){
+  musicStarted=true;
+  bgMusic.volume=0;bgMusic.play();
+  let v=0;const f=setInterval(()=>{if(v<.22){v+=.01;bgMusic.volume=v}else clearInterval(f)},200);
+ }
+ mainCard.classList.add("hidden");
+ successCard.classList.remove("hidden");
+ launchHearts();
+};
+
+letterBtn.onclick=()=>{
+ if(letterOpened)return;
+ letterOpened=true;
+ letterBox.classList.add("show");
+ bgMusic.volume=.08;
+ autoScroll=setInterval(()=>{
+  letterBox.scrollTop+=1;
+  if(letterBox.scrollTop+letterBox.clientHeight>=letterBox.scrollHeight)clearInterval(autoScroll);
+ },40);
+ setTimeout(()=>voiceBtn.classList.add("show"),2000);
+};
+
+voiceBtn.onclick=()=>{
+ if(voicePlayed)return;
+ voicePlayed=true;
+ if(autoScroll)clearInterval(autoScroll);
+ bgMusic.pause();bgMusic.currentTime=0;
+ voiceNote.volume=0;voiceNote.play();
+ let v=0;const vf=setInterval(()=>{if(v<1){v+=.05;voiceNote.volume=v}else clearInterval(vf)},200);
+ voiceBtn.classList.add("hidden");
+
+ voiceNote.onended=()=>{
+  launchHearts(["💜","💖","💛"]);
+  sparkles();
+  const n=document.createElement("div");
+  n.className="heart";n.innerText="Manu ❤️";n.style.left="50vw";
+  document.body.appendChild(n);
+  setTimeout(()=>n.remove(),4000);
+  whatsappBtn.classList.add("show");
+ };
+};
+
+whatsappBtn.onclick=()=>{
+ window.location.href="https://wa.me/918882763304?text=Love%20you%20too";
+};
+</script>
+
+</body>
+</html>
